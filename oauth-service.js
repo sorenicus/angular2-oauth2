@@ -1,7 +1,7 @@
 "use strict";
 var js_base64_1 = require('js-base64');
 var base64_js_1 = require('base64-js');
-var _sha256 = require('sha256');
+var _sha256 = require('sha.js');
 var sha256 = _sha256;
 var OAuthService = (function () {
     function OAuthService() {
@@ -304,10 +304,15 @@ var OAuthService = (function () {
         return data;
     };
     ;
+    OAuthService.prototype.hexToBytes = function (hex) {
+        for (var bytes = [], c = 0; c < hex.length; c += 2)
+            bytes.push(parseInt(hex.substr(c, 2), 16));
+        return bytes;
+    };
     OAuthService.prototype.checkAtHash = function (accessToken, idClaims) {
         if (!accessToken || !idClaims || !idClaims.at_hash)
             return true;
-        var tokenHash = sha256(accessToken, { asBytes: true });
+        var tokenHash = this.hexToBytes(sha256(accessToken));
         var leftMostHalf = tokenHash.slice(0, (tokenHash.length / 2));
         var tokenHashBase64 = base64_js_1.fromByteArray(leftMostHalf);
         var atHash = tokenHashBase64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");

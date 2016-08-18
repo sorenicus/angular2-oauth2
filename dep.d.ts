@@ -1,7 +1,7 @@
-declare module "sha256" {
+declare module "sha.js" {
     export var sha256: any;
-    export default sha256;  
-} 
+    export default sha256;
+}
 
 declare module "js-base64" {
     export var Base64: any;
